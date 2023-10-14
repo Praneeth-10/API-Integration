@@ -10,7 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.nycschools.ui.theme.NYCSchoolsTheme
+import com.example.nycschools.views.HomeScreen
+import com.example.nycschools.views.SchoolDetailsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    NYCNavigator()
                 }
             }
         }
@@ -30,17 +36,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun NYCNavigator(navController:NavHostController = rememberNavController()){
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NYCSchoolsTheme {
-        Greeting("Android")
+    NavHost(navController = navController, startDestination = "Home"){
+
+        composable("Home"){
+            HomeScreen(navController)
+        }
+
+        composable("SchoolDetails"){
+            SchoolDetailsScreen(navHostController = navController)
+        }
+
     }
+
 }
