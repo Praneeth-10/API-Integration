@@ -5,6 +5,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -64,6 +66,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     implementation ("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     val room_version = "2.5.2"
 
@@ -80,6 +83,11 @@ dependencies {
     //ViewModel and LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
+
+    //Hilt Dependency
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
 
     testImplementation("junit:junit:4.13.2")

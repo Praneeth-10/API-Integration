@@ -10,14 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nycschools.ui.theme.NYCSchoolsTheme
+import com.example.nycschools.utils.Utils
+import com.example.nycschools.viewmodel.SchoolsViewModel
 import com.example.nycschools.views.HomeScreen
 import com.example.nycschools.views.SchoolDetailsScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +43,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NYCNavigator(navController:NavHostController = rememberNavController()){
 
-    NavHost(navController = navController, startDestination = "Home"){
+    NavHost(navController = navController, startDestination = Utils.ScreenUtils.HOME_SCREEN){
 
-        composable("Home"){
+        composable(Utils.ScreenUtils.HOME_SCREEN){
             HomeScreen(navController)
         }
 
-        composable("SchoolDetails"){
+        composable(Utils.ScreenUtils.SCHOOL_INFO){
             SchoolDetailsScreen(navHostController = navController)
         }
 
