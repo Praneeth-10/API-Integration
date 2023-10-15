@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -61,39 +62,61 @@ fun HomeScreen(navController: NavHostController,schoolsViewModel: SchoolsViewMod
             schoolsViewModel.getNYCSchoolsList()
 
         }
-    }
+        Surface {
+            Column {
 
-    Surface {
-        Column {
-
-           Header()
-            Spacer(modifier = Modifier
-                .height(4.dp)
-                .fillMaxWidth(1f))
-            Column(modifier = Modifier.fillMaxHeight(1f)) {
-                LazyColumn{
-                    items(schoolsViewModel.schoolList.size) {index ->
-
-                        SchoolListItem2(schoolsViewModel.schoolList[index],{
-                            //To do a phone call
-
-                            navController.context.startActivity(Intent.createChooser(Intent(Intent.ACTION_CALL,Uri.parse("tel:+1$it")), "NYC Schools"))
-                        }){ item ->
-                            navController.currentBackStackEntry?.savedStateHandle?.let {
-                                it.set(Utils.NavUtils.SCHOOL_DBN,item.dbn)
-                            }
-                            navController.navigate(Utils.ScreenUtils.SCHOOL_INFO)
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                    }
-                }
+                Header()
                 Spacer(modifier = Modifier
                     .height(4.dp)
                     .fillMaxWidth(1f))
+                Column(modifier = Modifier.fillMaxHeight(1f)) {
+                    LazyColumn{
+                        items(schoolsViewModel.schoolList.size) {index ->
+
+                            SchoolListItem2(schoolsViewModel.schoolList[index],{
+                                //To do a phone call
+
+                                navController.context.startActivity(Intent.createChooser(Intent(Intent.ACTION_CALL,Uri.parse("tel:+1$it")), "NYC Schools"))
+                            }){ item ->
+                                navController.currentBackStackEntry?.savedStateHandle?.let {
+                                    it.set(Utils.NavUtils.SCHOOL_DBN,item.dbn)
+                                }
+                                navController.navigate(Utils.ScreenUtils.SCHOOL_INFO)
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                        }
+                    }
+                    Spacer(modifier = Modifier
+                        .height(4.dp)
+                        .fillMaxWidth(1f))
+                }
+                //IndeterminateCircularIndicator(schoolsViewModel.loadingIndicatorState)
             }
-            //IndeterminateCircularIndicator(schoolsViewModel.loadingIndicatorState)
+        }
+    }else{
+        Surface(modifier = Modifier.fillMaxSize(), color = Color.LightGray) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "No Internet connection",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Red,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(onClick = { /*TODO: Retry action*/ }) {
+                    Text(text = "Retry")
+                }
+            }
         }
     }
+
+
 }
 
 @Composable
