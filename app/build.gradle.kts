@@ -89,6 +89,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
+    // Mockito library for mocking objects in tests
+    testImplementation("org.mockito:mockito-core:4.0.0")
+//    androidTestImplementation("org.mockito:mockito-inline:4.0.0")
+//    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
