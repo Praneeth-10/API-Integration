@@ -1,13 +1,17 @@
 package com.example.nycschools.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nycschools.models.common.onSuccessResponse
+import com.example.nycschools.models.schools.SchoolList
 import com.example.nycschools.models.schools.SchoolListItem
 import com.example.nycschools.models.schools.SchoolScores
 import com.example.nycschools.models.schools.SchoolScoresItem
 import com.example.nycschools.repository.SchoolRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,22 +20,50 @@ class SchoolsViewModel @Inject constructor(private val repo: SchoolRepository) :
 
     val schoolList = mutableStateListOf<SchoolListItem>()
 
-    val schoolScores = mutableStateListOf<SchoolScoresItem>()
+    val schoolDetails = mutableStateOf(SchoolScoresItem())
+
+    val loadingIndicatorState = mutableStateOf(true)
 
 
 
     fun getNYCSchoolsList(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
            repo.getSchools().collect{
-               schoolList.addAll(it)
+               when(it){
+                   is onSuccessResponse<*> -> {
+                       schoolList.addAll(
+                           ((it as onSuccessResponse<*>).data) as SchoolList
+                       )
+                   }
+                   else -> {
+                       // show failure to user
+                   }
+               }
+
            }
         }
     }
 
     fun getSchoolDetails(dbn:String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repo.getSATScores(dbn).collect{
-                schoolScores.addAll(it)
+                loadingIndicatorState.value = false
+                when(it){
+                    is onSuccessResponse<*> -> {
+                        val scoresList = (((it as onSuccessResponse<*>).data) as SchoolScores)
+                        //check for the size
+                        if(scoresList.size>=1){
+                            schoolDetails.value = scoresList[0]
+                        }else{
+                            // throw no data found
+                        }
+                    }
+
+                    else -> {
+                        // throw exception
+                    }
+                }
+
             }
         }
     }
