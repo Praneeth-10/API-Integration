@@ -1,9 +1,7 @@
 package com.example.nycschools.di
 
-import com.example.nycschools.models.apiservice.SchoolServiceHelper
 import com.example.nycschools.repository.SchoolRepository
 import com.example.nycschools.utils.Utils
-import com.example.nycschools.viewmodel.SchoolsViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
