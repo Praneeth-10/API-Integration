@@ -1,7 +1,16 @@
 package com.example.nycschools.views
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -10,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +39,7 @@ import com.example.nycschools.viewmodel.SchoolsViewModel
 @Composable
 fun SchoolDetailsScreen(navHostController: NavHostController,schoolsViewModel: SchoolsViewModel = hiltViewModel()){
 
+
     val context = LocalContext.current
     val checkInternet = checkInternetConnectivity(context)
     if(checkInternet){
@@ -36,20 +47,15 @@ fun SchoolDetailsScreen(navHostController: NavHostController,schoolsViewModel: S
             val dbn = navHostController.previousBackStackEntry?.savedStateHandle?.get<String>(Utils.NavUtils.SCHOOL_DBN)
             schoolsViewModel.getSchoolDetails(dbn?:"")
         }
-
-        Surface {
-
-            LazyColumn{
-                items(schoolsViewModel.schoolScores.size){
-                    schoolInfo(schoolsViewModel.schoolScores[it])
-                }
+        Surface(modifier = Modifier.fillMaxSize(1f)) {
+            Column {
+                Header()
+                schoolInfo(schoolScoresItem = schoolsViewModel.schoolDetails.value)
             }
-            Text(text = "This is school Detail screen !!")
-
 
         }
-    }
-    else{
+    }else {
+
         Surface(modifier = Modifier.fillMaxSize(), color = Color.LightGray) {
             Column(
                 modifier = Modifier
@@ -72,13 +78,36 @@ fun SchoolDetailsScreen(navHostController: NavHostController,schoolsViewModel: S
         }
 
     }
+    
 
 
 }
 
 @Composable
 fun schoolInfo(schoolScoresItem: SchoolScoresItem) {
-    Column {
-        Text(text = "${schoolScoresItem.school_name}")
+    Column ( modifier = Modifier.fillMaxWidth(1f)){
+        Row(modifier = Modifier
+            .fillMaxWidth(1f)
+            .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center) {
+            Text(text = " ${schoolScoresItem.school_name} ")
+        }
+
+        Spacer(modifier = Modifier
+            .fillMaxHeight(0.02f)
+            .fillMaxWidth(1f))
+
+        Column {
+
+            Text(text = annotatedStringBuilder("No Of TestTaker :",schoolScoresItem.num_of_sat_test_takers))
+            Text(text = annotatedStringBuilder("Avg. Critical Reading : ",schoolScoresItem.sat_critical_reading_avg_score))
+            Text(text = annotatedStringBuilder("Avg. Math :", schoolScoresItem.sat_math_avg_score))
+            Text(text = annotatedStringBuilder("Avg. Writing : ",schoolScoresItem.sat_writing_avg_score))
+
+        }
     }
+
 }
+
+

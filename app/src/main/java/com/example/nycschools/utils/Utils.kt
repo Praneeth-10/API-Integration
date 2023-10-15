@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
+
 object Utils {
 
     object checkInternet{
@@ -31,8 +32,11 @@ object Utils {
         }
 
     }
+    const val APP_NAME = "NYC Schools"
+
     object NetworkUtils{
         const val BASE_URL = "https://data.cityofnewyork.us"
+        const val UNKOWN_EXCEPTION = "UNKNOW EXCEPTION"
     }
 
     object ScreenUtils{
@@ -43,6 +47,4 @@ object Utils {
     object NavUtils{
         const val SCHOOL_DBN = "School dbn"
     }
-
-
 }
