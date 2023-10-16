@@ -32,7 +32,6 @@ class SchoolRepository @Inject constructor(retrofit:Retrofit) {
         }catch (e:Exception){
             emit(onFailure(e.localizedMessage?: Utils.NetworkUtils.UNKOWN_EXCEPTION))
         }
-
     }
 
     suspend fun getSATScores(dbn:String) = flow<NetworkResponse>{
@@ -44,6 +43,5 @@ class SchoolRepository @Inject constructor(retrofit:Retrofit) {
         }catch (e:Exception){
             emit(onFailure(e.localizedMessage?:Utils.NetworkUtils.UNKOWN_EXCEPTION))
         }
-
     }
 }

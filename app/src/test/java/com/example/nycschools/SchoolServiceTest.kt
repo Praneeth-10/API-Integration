@@ -44,8 +44,9 @@ class SchoolServiceTest(private val dbn: String, private val school_name: String
     fun testGetSchools() = runBlocking {
         val mockSchoolListItem = SchoolListItem(
             dbn = dbn,
-            zip = "zip",
-            school_name = school_name
+            school_name = "school_Name",
+            phone_number = "phone_Number",
+            school_email = "school_Email"
         )
         val mockSchoolList = SchoolList()
         mockSchoolList.add(mockSchoolListItem)

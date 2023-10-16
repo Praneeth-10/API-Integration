@@ -24,6 +24,8 @@ class SchoolsViewModel @Inject constructor(private val repo: SchoolRepository) :
 
     val loadingIndicatorState = mutableStateOf(true)
 
+    val errorState = mutableStateOf<Exception?>(null)
+
 
 
     fun getNYCSchoolsList(){
@@ -34,9 +36,12 @@ class SchoolsViewModel @Inject constructor(private val repo: SchoolRepository) :
                        schoolList.addAll(
                            ((it as onSuccessResponse<*>).data) as SchoolList
                        )
+                       loadingIndicatorState.value = false
                    }
                    else -> {
                        // show failure to user
+                       throw Exception("No data found")
+
                    }
                }
 
@@ -46,24 +51,28 @@ class SchoolsViewModel @Inject constructor(private val repo: SchoolRepository) :
 
     fun getSchoolDetails(dbn:String){
         viewModelScope.launch(Dispatchers.IO) {
-            repo.getSATScores(dbn).collect{
-                loadingIndicatorState.value = false
-                when(it){
-                    is onSuccessResponse<*> -> {
-                        val scoresList = (((it as onSuccessResponse<*>).data) as SchoolScores)
-                        //check for the size
-                        if(scoresList.size>=1){
-                            schoolDetails.value = scoresList[0]
-                        }else{
-                            // throw no data found
+            try {
+                repo.getSATScores(dbn).collect{
+                    loadingIndicatorState.value = false
+                    when(it){
+                        is onSuccessResponse<*> -> {
+                            val scoresList = (((it as onSuccessResponse<*>).data) as SchoolScores)
+                            //checking for the size
+                            if(scoresList.size>=1){
+                                schoolDetails.value = scoresList[0]
+                            }else{
+                                // throw no data found
+                                schoolDetails.value = SchoolScoresItem(dbn,"No Data Found","No Data Found","No Data Found","No Data Found","No Data Found")
+                            }
+                        }
+                        else -> {
+                            // throw exception
+                            throw Exception("An error occurred while fetching school details")
                         }
                     }
-
-                    else -> {
-                        // throw exception
-                    }
                 }
-
+            } catch (e: Exception) {
+                errorState.value = e
             }
         }
     }
